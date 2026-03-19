@@ -50,13 +50,13 @@ export const SOURCES: FeedSource[] = [
     name: "arXiv (cs.AI)",
     feedUrl: "http://export.arxiv.org/rss/cs.AI",
     categoryHints: ["ai-ml"],
-    weight: 0.8
+    weight: 0.45
   },
   {
     id: "arxiv-cs-lg",
     name: "arXiv (cs.LG)",
     feedUrl: "http://export.arxiv.org/rss/cs.LG",
     categoryHints: ["ai-ml"],
-    weight: 0.8
+    weight: 0.45
   }
 ];

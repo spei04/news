@@ -15,6 +15,22 @@ function withinHours(iso: string, hours: number) {
   return Date.now() - t <= hours * 3_600_000;
 }
 
+function selectDiverse(
+  scored: { candidate: CandidateItem; category: string; score: number }[],
+  opts: { maxTotal: number; maxPerSource: number }
+) {
+  const out: typeof scored = [];
+  const perSource = new Map<string, number>();
+  for (const s of scored) {
+    const n = perSource.get(s.candidate.sourceId) ?? 0;
+    if (n >= opts.maxPerSource) continue;
+    out.push(s);
+    perSource.set(s.candidate.sourceId, n + 1);
+    if (out.length >= opts.maxTotal) break;
+  }
+  return out;
+}
+
 export async function runAllDailyDigests(opts?: { date?: string; maxAgeHours?: number; maxItemsPerCategory?: number }) {
   const date = opts?.date ?? isoDateUTC(new Date());
   const maxAgeHours = opts?.maxAgeHours ?? 72;
@@ -59,7 +75,11 @@ export async function runAllDailyDigests(opts?: { date?: string; maxAgeHours?: n
   for (const cat of SITE_CATEGORIES) {
     const categorySlug = cat.slug;
     const slice = categorySlug === "all" ? scored : scored.filter((s) => s.category === categorySlug);
-    const top = slice.slice(0, 40);
+    const top = selectDiverse(slice, {
+      // LLM/heuristics get more varied candidates to avoid a single source (e.g., arXiv) dominating.
+      maxTotal: 60,
+      maxPerSource: categorySlug === "ai-ml" ? 6 : 8
+    });
 
     const llmItems = await summarizeWithOpenAI(top, { maxItems: maxItemsPerCategory, date, categorySlug });
     const items = llmItems ?? (await summarizeHeuristic(top.slice(0, maxItemsPerCategory * 2)));
