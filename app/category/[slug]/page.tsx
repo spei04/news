@@ -30,7 +30,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       date: fmtLong(it.publishedAt),
       imageUrl: CATEGORY_IMAGES[categoryName] ?? CATEGORY_IMAGES.Default,
       readTime: "5 min read",
-      href: `/article/${encodeURIComponent(it.id)}`
+      href: `/article/${encodeURIComponent(it.id)}` as Article["href"]
     })) ?? [];
 
   return (

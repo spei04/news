@@ -2,8 +2,16 @@ import Link from "next/link";
 import { Newspaper } from "lucide-react";
 import { SignUp } from "@clerk/nextjs";
 
-export default function RegisterPage({ searchParams }: { searchParams: { email?: string } }) {
-  const email = searchParams?.email ?? "";
+type RegisterPageSearchParams = { email?: string | string[] };
+
+export default async function RegisterPage({
+  searchParams
+}: {
+  searchParams?: Promise<RegisterPageSearchParams>;
+}) {
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const emailValue = resolvedSearchParams.email;
+  const email = Array.isArray(emailValue) ? (emailValue[0] ?? "") : (emailValue ?? "");
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gray-50">
       <div className="w-full max-w-md">

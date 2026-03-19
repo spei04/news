@@ -14,8 +14,9 @@ const SubscriptionUpdateSchema = z.object({
 });
 
 export async function GET() {
-  auth().protect();
+  const { userId } = await auth.protect();
   const user = await currentUser();
+  if (!userId || !user) return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   const email = user?.primaryEmailAddress?.emailAddress ?? null;
   if (!email) return NextResponse.json({ ok: false, error: "missing_email" }, { status: 400 });
 
@@ -33,8 +34,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  auth().protect();
+  const { userId } = await auth.protect();
   const user = await currentUser();
+  if (!userId || !user) return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   const email = user?.primaryEmailAddress?.emailAddress ?? null;
   if (!email) return NextResponse.json({ ok: false, error: "missing_email" }, { status: 400 });
 
@@ -56,4 +58,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok });
 }
-

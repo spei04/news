@@ -48,7 +48,7 @@ function digestToArticles(digest: Digest | null): Article[] {
       date: fmtLong(it.publishedAt),
       imageUrl,
       readTime: roughReadTimeFromText(`${it.title} ${excerpt} ${it.whyItMatters}`),
-      href: `/article/${encodeURIComponent(it.id)}`,
+      href: `/article/${encodeURIComponent(it.id)}` as Article["href"],
       featured: idx === 0
     };
   });

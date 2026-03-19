@@ -1,3 +1,5 @@
+import type { Route } from "next";
+
 export type Article = {
   id: string;
   title: string;
@@ -7,7 +9,7 @@ export type Article = {
   date: string;
   imageUrl: string;
   readTime: string;
-  href: string;
+  href: Route;
   featured?: boolean;
 };
 
@@ -25,4 +27,3 @@ export const CATEGORY_IMAGES: Record<string, string> = {
   Default:
     "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80"
 };
-

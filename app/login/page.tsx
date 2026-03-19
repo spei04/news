@@ -2,8 +2,16 @@ import Link from "next/link";
 import { Newspaper } from "lucide-react";
 import { SignIn } from "@clerk/nextjs";
 
-export default function LoginPage({ searchParams }: { searchParams: { email?: string } }) {
-  const email = searchParams?.email ?? "";
+type LoginPageSearchParams = { email?: string | string[] };
+
+export default async function LoginPage({
+  searchParams
+}: {
+  searchParams?: Promise<LoginPageSearchParams>;
+}) {
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const emailValue = resolvedSearchParams.email;
+  const email = Array.isArray(emailValue) ? (emailValue[0] ?? "") : (emailValue ?? "");
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-gray-50">
       <div className="w-full max-w-md">
@@ -20,7 +28,7 @@ export default function LoginPage({ searchParams }: { searchParams: { email?: st
           <SignIn
             fallbackRedirectUrl="/settings"
             signUpUrl="/register"
-            initialValues={email ? { identifier: email } : undefined}
+            initialValues={email ? { emailAddress: email } : undefined}
             appearance={{
               elements: {
                 rootBox: "mx-auto",
