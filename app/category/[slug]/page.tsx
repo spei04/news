@@ -1,7 +1,7 @@
 import { readLatestDigest } from "@/lib/storage";
 import { SITE_CATEGORIES } from "@/lib/site/categories";
 import { NewsCard } from "@/components/site/NewsCard";
-import { CATEGORY_IMAGES } from "@/lib/site/article";
+import { pickImageForArticle } from "@/lib/site/article";
 import type { Article } from "@/lib/site/article";
 import { Newspaper } from "lucide-react";
 
@@ -28,7 +28,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       category: categoryName,
       author: it.source,
       date: fmtLong(it.publishedAt),
-      imageUrl: CATEGORY_IMAGES[categoryName] ?? CATEGORY_IMAGES.Default,
+      imageUrl: pickImageForArticle(categoryName, it.url),
       readTime: "5 min read",
       href: `/article/${encodeURIComponent(it.id)}` as Article["href"]
     })) ?? [];

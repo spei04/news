@@ -1,14 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Digest } from "@/lib/storage";
 import { Filters } from "@/components/site/Filters";
 import { NewsCard } from "@/components/site/NewsCard";
 import type { Article } from "@/lib/site/article";
-import { CATEGORY_IMAGES } from "@/lib/site/article";
+import { pickImageForArticle } from "@/lib/site/article";
 import { SITE_CATEGORIES } from "@/lib/site/categories";
-
-type TabType = (typeof SITE_CATEGORIES)[number]["slug"];
 
 function fmtLong(iso: string) {
   const d = new Date(iso);
@@ -37,7 +36,7 @@ function digestToArticles(digest: Digest | null): Article[] {
               : it.category === "entertainment"
                 ? "Entertainment"
                 : "AI/ML";
-    const imageUrl = CATEGORY_IMAGES[categoryName] ?? CATEGORY_IMAGES.Default;
+    const imageUrl = pickImageForArticle(categoryName, it.url);
     const excerpt = it.summary.join(" ");
     return {
       id: it.id,
@@ -55,7 +54,6 @@ function digestToArticles(digest: Digest | null): Article[] {
 }
 
 export function HomeClient({ digest }: { digest: Digest | null }) {
-  const [activeTab, setActiveTab] = useState<TabType>("all");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("latest");
   const [dateRange, setDateRange] = useState("all");
@@ -64,10 +62,6 @@ export function HomeClient({ digest }: { digest: Digest | null }) {
 
   const filteredArticles = useMemo(() => {
     let out = [...articles];
-    if (activeTab !== "all") {
-      const tabName = SITE_CATEGORIES.find((c) => c.slug === activeTab)?.name;
-      if (tabName) out = out.filter((a) => a.category === tabName);
-    }
 
     if (selectedCategories.length > 0) {
       out = out.filter((a) => selectedCategories.includes(a.category));
@@ -81,7 +75,7 @@ export function HomeClient({ digest }: { digest: Digest | null }) {
     void dateRange;
 
     return out;
-  }, [activeTab, articles, dateRange, selectedCategories, sortBy]);
+  }, [articles, dateRange, selectedCategories, sortBy]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -101,17 +95,17 @@ export function HomeClient({ digest }: { digest: Digest | null }) {
       <div className="mb-6 border-b border-gray-200">
         <div className="flex gap-1 -mb-px overflow-x-auto">
           {SITE_CATEGORIES.map((tab) => (
-            <button
+            <Link
               key={tab.slug}
-              onClick={() => setActiveTab(tab.slug)}
               className={`px-6 py-3 text-sm font-semibold border-b-2 whitespace-nowrap transition-colors ${
-                activeTab === tab.slug
+                tab.slug === "all"
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300"
               }`}
+              href={tab.slug === "all" ? "/" : `/category/${tab.slug}`}
             >
               {tab.name}
-            </button>
+            </Link>
           ))}
         </div>
       </div>
