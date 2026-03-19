@@ -7,12 +7,19 @@ export const dynamic = "force-dynamic";
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const decodedId = (() => {
+    try {
+      return decodeURIComponent(id);
+    } catch {
+      return id;
+    }
+  })();
   const slugs = SITE_CATEGORIES.map((c) => c.slug);
   const digests = await readLatestDigests(slugs);
   const item =
     Object.values(digests)
       .flatMap((d) => d?.items ?? [])
-      .find((x) => x.id === id) ?? null;
+      .find((x) => x.id === decodedId) ?? null;
 
   if (!item) {
     return (
