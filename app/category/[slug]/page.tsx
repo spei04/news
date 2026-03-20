@@ -24,7 +24,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     digest?.items.map((it) => ({
       id: it.id,
       title: it.title,
-      excerpt: it.summary.join(" "),
+      excerpt: it.summary.slice(0, 2).join(" "),
       category: categoryName,
       author: it.source,
       date: fmtLong(it.publishedAt),

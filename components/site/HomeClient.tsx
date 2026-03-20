@@ -37,7 +37,8 @@ function digestToArticles(digest: Digest | null): Article[] {
                 ? "Entertainment"
                 : "AI/ML";
     const imageUrl = pickImageForArticle(categoryName, it.url);
-    const excerpt = it.summary.join(" ");
+    // Keep list cards short; full bullet list appears on the article detail page.
+    const excerpt = it.summary.slice(0, 2).join(" ");
     return {
       id: it.id,
       title: it.title,
