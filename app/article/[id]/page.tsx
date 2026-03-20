@@ -55,12 +55,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       </div>
 
       <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <ul className="list-disc pl-5 text-gray-700 space-y-2">
+        <h2 className="text-sm font-extrabold tracking-wide text-gray-900 uppercase">Main points</h2>
+        <ul className="list-disc pl-5 text-gray-700 space-y-2 mt-3">
           {item.summary.map((b, i) => (
             <li key={i}>{b}</li>
           ))}
         </ul>
-        <p className="text-gray-600 mt-4">{item.whyItMatters}</p>
+
+        <h2 className="text-sm font-extrabold tracking-wide text-gray-900 uppercase mt-6">Why it matters</h2>
+        <p className="text-gray-600 mt-3">{item.whyItMatters}</p>
 
         <div className="mt-6">
           <a

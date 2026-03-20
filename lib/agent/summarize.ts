@@ -7,11 +7,11 @@ function toBullets(snippet: string) {
   if (!s) return [];
   // Prefer sentence-ish splits; fall back to truncation.
   const parts = s.split(/(?<=[.!?])\s+/).filter(Boolean);
-  const bullets = parts.slice(0, 3).map((p) => p.replace(/^[-*•\s]+/, "").trim());
+  const bullets = parts.slice(0, 4).map((p) => p.replace(/^[-*•\s]+/, "").trim());
   return bullets
     .map((b) => (b.length > 160 ? b.slice(0, 157).trimEnd() + "..." : b))
     .filter(Boolean)
-    .slice(0, 2);
+    .slice(0, 3);
 }
 
 function defaultWhy(category: DigestCategory, title: string) {
@@ -68,7 +68,7 @@ export async function summarizeWithOpenAI(
       ? `Pick up to ${opts.maxItems} total items across these categories: ${CATEGORY_DEFS.map((c) => `${c.slug} (${c.name})`).join(", ")}.`
       : `Pick up to ${opts.maxItems} total items ONLY for category ${opts.categorySlug}.`,
     "Hard constraint: the entire digest must be readable in under 10 minutes.",
-    "For each selected item, write 2 bullet points (tight, factual) and one short 'why it matters' sentence.",
+    "For each selected item, write 3 bullet points (tight, factual) and one short 'why it matters' sentence.",
     "Avoid hype, avoid speculation, no more than ~55 words per item total.",
     "Return STRICT JSON with shape: { items: Array<{ url, category, summary: string[], whyItMatters: string }> }",
     "",
@@ -110,7 +110,7 @@ export async function summarizeWithOpenAI(
       publishedAt: hit.candidate.publishedAt,
       category: hit.category,
       score: hit.score,
-      summary: summary.slice(0, 2),
+      summary: summary.slice(0, 3),
       whyItMatters
     });
   }

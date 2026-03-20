@@ -147,7 +147,7 @@ export function renderSubscriptionEmail(opts: {
               ${items
                 .map((it) => {
                   const bullets = it.summary
-                    .slice(0, 2)
+                    .slice(0, 3)
                     .map((b) => `<li style="margin:6px 0;color:#111827;">${esc(b)}</li>`)
                     .join("");
                   return `<div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;margin:10px 0;">
@@ -185,7 +185,7 @@ export function renderSubscriptionEmail(opts: {
         lines.push(`${it.source}`);
         lines.push(it.title);
         lines.push(it.url);
-        lines.push(...it.summary.slice(0, 2).map((b) => `- ${b}`));
+        lines.push(...it.summary.slice(0, 3).map((b) => `- ${b}`));
         lines.push(`Why: ${it.whyItMatters}`);
         lines.push("");
       }
