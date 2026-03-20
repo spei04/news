@@ -47,11 +47,21 @@ Option B: call the built-in API route from your scheduler:
 - `POST /api/cron/digest` with `Authorization: Bearer $CRON_SECRET`
 - Set `CRON_SECRET` in your environment
   - Copy `.env.example` to `.env.local` for local dev
+  - Vercel Cron Jobs call your endpoints with `GET` (supported by these routes)
 
 Send emails (requires Postgres + Resend):
 
 - `POST /api/cron/send-digests` with `Authorization: Bearer $CRON_SECRET`
 - Set `RESEND_API_KEY`, `EMAIL_FROM`, and `SITE_URL`
+
+## Vercel Cron (vercel.json)
+
+This repo includes `vercel.json` with a daily cron pointing at `GET /api/cron`, which runs:
+
+- digest generation (all categories)
+- email send (only if Resend env vars are configured)
+
+Note: cron schedules are interpreted in UTC.
 
 Note: writing to the filesystem works great on a traditional server. On serverless platforms with ephemeral disks, store digests in a DB/object store instead of `data/`.
 
